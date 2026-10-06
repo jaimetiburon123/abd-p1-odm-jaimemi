@@ -67,7 +67,6 @@ Evento:
     - preferencia_genero
     - direccion_loc
   unique_indexes:
-    - nombre
     - correo_electronico
   regular_indexes: []
   location_index: direccion
