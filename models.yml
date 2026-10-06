@@ -29,7 +29,7 @@ Recinto:
     - aforo
   location_index: direccion
 
-  Artista:
+Artista:
   required_vars:
     - nombre
     - generos
@@ -57,7 +57,7 @@ Evento:
     - fecha_y_hora
   location_index: []
 
-  Asistente:
+Asistente:
   required_vars:
     - nombre
     - correo_electronico
