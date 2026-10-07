@@ -316,18 +316,35 @@ def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://local
     """
     #TODO
     # Inicializar base de datos
+    client = MongoClient(mongodb_uri)
+    db = client[db_name]
 
     #TODO
     # Declarar tantas clases modelo colecciones existan en la base de datos
     # Leer el fichero de definiciones de modelos para obtener las colecciones,
     # indices y los atributos admitidos y requeridos para cada una de ellas.
-    # Ejemplo de declaracion de modelo para colecion llamada MiModelo
-    scope["MiModelo"] = type("MiModelo", (Model,),{})
-    # La clase se declara en tiempo de ejecucion y queda en scope, que no tiene
-    # por que ser el espacio de nombres global: las pruebas le pasan su propio
-    # diccionario. Por eso se inicializa a traves de scope y no por su nombre,
-    # que ahi todavia no existe.
-    scope["MiModelo"].init_class(db_collection=None, indexes=None, required_vars=None, admissible_vars=None)
+
+    with open(definitions_path, "r", encoding="utf-8") as file:
+        definitions = yaml.safe_load(file)
+
+    for model_name, config in definitions.items():
+        collection = db[model_name]
+
+        scope[model_name] = type(model_name, (Model,),{})
+
+        indexes = {}
+
+        for field in config.get("unique_indexes", []):
+            indexes[field] = "unique"
+
+        for field in config.get("regular_indexes", []):
+            indexes[field] = "asc"
+
+        location_index = config.get("location_index", [])
+        if(location_index):
+            indexes[location_index] = "geosphere"
+
+        scope[model_name].init_class(db_collection=collection, indexes=indexes, required_vars=set(config.get("required_vars")), admissible_vars=set(config.get("admissible_vars", [])))
 
 if __name__ == '__main__':
     
