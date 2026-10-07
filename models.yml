@@ -40,7 +40,6 @@ Artista:
     - nombre
   regular_indexes:
     - generos
-  location_index: []
 
 Evento:
   required_vars:
@@ -55,7 +54,6 @@ Evento:
     - titulo
   regular_indexes:
     - fecha_y_hora
-  location_index: []
 
 Asistente:
   required_vars:

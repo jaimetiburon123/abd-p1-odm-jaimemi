@@ -340,8 +340,8 @@ def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://local
         for field in config.get("regular_indexes", []):
             indexes[field] = "asc"
 
-        location_index = config.get("location_index", [])
-        if(location_index):
+        if "location_index" in config:
+            location_index = config["location_index"]
             indexes[location_index] = "geosphere"
 
         scope[model_name].init_class(db_collection=collection, indexes=indexes, required_vars=set(config.get("required_vars")), admissible_vars=set(config.get("admissible_vars", [])))
