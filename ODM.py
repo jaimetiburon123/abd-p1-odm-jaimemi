@@ -294,7 +294,14 @@ class ModelCursor:
         Utilizar alive para comprobar si existen mas documentos.
         """
         #TODO
-        pass #No olvidar eliminar esta linea una vez implementado
+
+        while self.cursor.alive:
+            try:
+                document = next(self.cursor)
+            except StopIteration:
+                break
+
+            yield self.model(**document)
 
 
 def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://localhost:27017/", db_name="abd", scope=globals()) -> None:
