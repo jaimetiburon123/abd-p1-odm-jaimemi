@@ -106,6 +106,7 @@ class Model:
                 diccionario con los valores de las atributos del modelo
         """
         self._data: dict[str, str | dict | list] = {}
+        self._modified_vars: set[str] = set()
         #TODO
         # Realizar las comprabociones y gestiones necesarias
         # antes de la asignacion.
@@ -118,7 +119,7 @@ class Model:
         # gestion en metodos como save.
 
         for var in self._required_vars:
-            if var not in self._data:
+            if var not in kwargs:
                 raise ValueError(f"Missing required variable: {var}")
 
         for var in kwargs:
@@ -138,6 +139,12 @@ class Model:
         #TODO
         # Realizar las comprabociones y gestiones necesarias
         # antes de la asignacion.
+
+        if name not in self._required_vars and name not in self._admissible_vars:
+            raise ValueError(f"Variable {name} is not admissible for this model")
+
+        if name not in self._data or self._data[name] != value:
+            self._modified_vars.add(name)
 
         # Asigna el valor value a la variable name
         self._data[name] = value
