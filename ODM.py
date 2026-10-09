@@ -250,6 +250,15 @@ class Model:
         # <campo>_loc, luego el índice 2dsphere va sobre <campo>_loc, mientras
         # que _location_var debe guardar el nombre del campo base.
 
+        for field, index_type in indexes.items():
+            if index_type == "unique":
+                cls._db.create_index(field, unique=True)
+            elif index_type == "asc":
+                cls._db.create_index(field)
+            elif index_type == "geosphere":
+                cls._db.create_index(f"{field}_loc", pymongo.GEOSPHERE)
+                cls._location_var = field
+
 
 class ModelCursor:
     """ 
