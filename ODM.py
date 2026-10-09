@@ -116,6 +116,15 @@ class Model:
         # almacenadas en la base de datos en una solo atributo
         # Encapsular los datos en una sola variable facilita la 
         # gestion en metodos como save.
+
+        for var in self._required_vars:
+            if var not in self._data:
+                raise ValueError(f"Missing required variable: {var}")
+
+        for var in kwargs:
+            if var not in self._required_vars and var not in self._admissible_vars:
+                raise ValueError(f"Variable {var} is not admissible for this model")
+
         self._data.update(kwargs)
 
     def __setattr__(self, name: str, value: str | dict) -> None:
