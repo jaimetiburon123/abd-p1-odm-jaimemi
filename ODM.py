@@ -175,7 +175,36 @@ class Model:
         modelo.
         """
         #TODO
-        pass #No olvidar eliminar esta linea una vez implementado
+
+        is_new = "_id" not in self._data
+
+        address_field = self._location_var
+
+        if(
+            address_field is not None
+            and address_field in self._data
+            and self._data[address_field] is not None
+            and (is_new or address_field in self._modified_vars)
+        ):
+            location_field = f"{address_field}_loc"
+            self._data[location_field] = getLocationPoint(self._data[address_field])
+            self._modified_vars.add(location_field)
+
+
+        if is_new:
+            result = self._db.insert_one(self._data.copy())
+            self._data["_id"] = result.inserted_id
+        elif self._modified_vars: 
+            updates = {}
+            for field in self._modified_vars:
+                updates[field] = self._data[field]
+
+            self._db.update_one(
+                {"_id": self._data["_id"]},
+                {"$set": updates},
+            )
+
+        self._modified_vars.clear()
 
     def delete(self) -> None:
         """
