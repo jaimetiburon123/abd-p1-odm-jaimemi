@@ -231,7 +231,13 @@ class Model:
         """ 
         #TODO
         # cls es el puntero a la clase
-        pass #No olvidar eliminar esta linea una vez implementado
+        
+        if filter is None:
+            filter = {}
+
+        mongo_cursor = cls._db.find(filter)
+        return ModelCursor(cls, mongo_cursor)
+        
 
     @classmethod
     def aggregate(cls, pipeline: list[dict]) -> pymongo.command_cursor.CommandCursor:
