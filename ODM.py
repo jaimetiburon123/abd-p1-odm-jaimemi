@@ -128,7 +128,7 @@ class Model:
                 raise ValueError(f"Missing required variable: {var}")
 
         for var in kwargs:
-            if var not in self._required_vars and var not in self._admissible_vars:
+            if (var not in self._required_vars and var not in self._admissible_vars and var != "_id"):
                 raise ValueError(f"Variable {var} is not admissible for this model")
 
         self._data.update(kwargs)
