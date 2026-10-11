@@ -211,7 +211,13 @@ class Model:
         Elimina el modelo de la base de datos
         """
         #TODO
-        pass
+        if "_id" not in self._data:
+            raise ValueError("Cannot delete unsaved documents")
+
+        self._db.delete_one({"_id": self._data["_id"]})
+
+        del self._data["_id"]
+        self._modified_vars.clear()
     
     @classmethod
     def find(cls, filter: dict[str, str | dict]) -> Any:
