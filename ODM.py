@@ -318,7 +318,7 @@ class Model:
             elif index_type == "asc":
                 cls._db.create_index(field)
             elif index_type == "geosphere":
-                cls._db.create_index(f"{field}_loc", pymongo.GEOSPHERE)
+                cls._db.create_index([(f"{field}_loc", pymongo.GEOSPHERE)])
                 cls._location_var = field
 
 
