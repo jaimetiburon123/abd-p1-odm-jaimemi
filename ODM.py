@@ -424,36 +424,185 @@ def initApp(definitions_path: str = "./models.yml", mongodb_uri="mongodb://local
 
         scope[model_name].init_class(db_collection=collection, indexes=indexes, required_vars=set(config.get("required_vars")), admissible_vars=set(config.get("admissible_vars", [])))
 
-if __name__ == '__main__':
-    
-    # Inicializar base de datos y modelos con initApp
-    #TODO
+if __name__ == "__main__":
+
     initApp()
 
-    #Ejemplo
-    m = MiModelo(nombre="Pablo", apellido="Ramos", edad=18)
-    m.save()
-    m.nombre="Pedro"
-    print(m.nombre)
+    Artista._db.delete_many({})
+    Recinto._db.delete_many({})
+    Evento._db.delete_many({})
+    Asistente._db.delete_many({})
 
-    # Hacer pruebas para comprobar que funciona correctamente el modelo
-    #TODO
-    # Crear modelo
+    artista1 = Artista(nombre="Bad Bunny", generos=["Reggaeton", "Trap"],
+                      pais_de_origen="Puerto Rico", año_de_inicio=2016)
 
-    # Asignar nuevo valor a variable admitida del objeto 
+    artista2 = Artista(nombre="Taylor Swift", generos=["Pop", "Country"],
+                      pais_de_origen="Estados Unidos", año_de_inicio=2006)
 
-    # Asignar nuevo valor a variable no admitida del objeto 
+    artista3 = Artista(nombre="Rosalia", generos=["Pop", "Flamenco"],
+                      pais_de_origen="España", año_de_inicio=2013)
 
-    # Guardar
+    artista4 = Artista(nombre="Drake", generos=["Rap", "Hip-Hop"],
+                      pais_de_origen="Canada", año_de_inicio=2006)
 
-    # Asignar nuevo valor a variable admitida del objeto
+    artista5 = Artista(nombre="Coldplay", generos=["Pop", "Rock"],
+                      pais_de_origen="Reino Unido", año_de_inicio=1997)
 
-    # Guardar
+    artista1.save()
+    artista2.save()
+    artista3.save()
+    artista4.save()
+    artista5.save()
 
-    # Buscar nuevo documento con find
+    print("5 artists saved")
 
-    # Obtener primer documento
 
-    # Modificar valor de variable admitida
+    recinto1 = Recinto(nombre="Movistar Arena", direccion="Madrid, España",
+                       aforo=17000, zonas={"Pista": 5000, "Grada": 12000})
 
-    # Guardar
+    recinto2 = Recinto(nombre="Palau Sant Jordi", direccion="Barcelona, España",
+                       aforo=18000, zonas={"Pista": 6000, "Grada": 12000})
+
+    recinto3 = Recinto(nombre="Estadio Metropolitano", direccion="Madrid, España",
+                       aforo=68000, zonas={"Pista": 15000, "Grada": 53000})
+
+    recinto4 = Recinto(nombre="WiZink Hall", direccion="Valencia, España",
+                       aforo=3000, zonas={"Pista": 1000, "Grada": 2000})
+
+    recinto5 = Recinto(nombre="Coliseum A Coruna", direccion="A Coruña, España",
+                       aforo=11000, zonas={"Pista": 4000, "Grada": 7000})
+
+    recinto1.save()
+    recinto2.save()
+    recinto3.save()
+    recinto4.save()
+    recinto5.save()
+
+    print("5 venues saved")
+
+
+    evento1 = Evento(titulo="Bad Bunny Madrid 2026",
+                     artistas=["Bad Bunny"], recinto="Movistar Arena",
+                     fecha_y_hora="2026-12-15 21:00",
+                     precio_por_zona={"Pista": 120, "Grada": 80})
+
+    evento2 = Evento(titulo="Taylor Swift Barcelona 2025",
+                     artistas=["Taylor Swift"], recinto="Palau Sant Jordi",
+                     fecha_y_hora="2025-06-20 20:00",
+                     precio_por_zona={"Pista": 150, "Grada": 100})
+
+    evento3 = Evento(titulo="Rosalia Madrid 2027",
+                     artistas=["Rosalia"], recinto="Estadio Metropolitano",
+                     fecha_y_hora="2027-05-10 22:00",
+                     precio_por_zona={"Pista": 100, "Grada": 70})
+
+    evento4 = Evento(titulo="Drake Valencia 2024",
+                     artistas=["Drake"], recinto="WiZink Hall",
+                     fecha_y_hora="2024-09-12 21:30",
+                     precio_por_zona={"Pista": 110, "Grada": 75})
+
+    evento5 = Evento(titulo="Coldplay A Coruna 2026",
+                     artistas=["Coldplay"], recinto="Coliseum A Coruna",
+                     fecha_y_hora="2026-08-25 20:30",
+                     precio_por_zona={"Pista": 130, "Grada": 90})
+
+    evento1.save()
+    evento2.save()
+    evento3.save()
+    evento4.save()
+    evento5.save()
+
+    print("5 events saved")
+
+
+    asistente1 = Asistente(nombre="Carlos Garcia",
+                          correo_electronico="carlos@example.com",
+                          direccion="Madrid, España")
+
+    asistente2 = Asistente(nombre="Lucia Fernandez",
+                          correo_electronico="lucia@example.com",
+                          direccion="Barcelona, España")
+
+    asistente3 = Asistente(nombre="Pablo Martinez",
+                          correo_electronico="pablo@example.com",
+                          direccion="Valencia, España")
+
+    asistente4 = Asistente(nombre="Ana Lopez",
+                          correo_electronico="ana@example.com",
+                          direccion="Sevilla, España")
+
+    asistente5 = Asistente(nombre="David Rodriguez",
+                          correo_electronico="david@example.com",
+                          direccion="A Coruña, España")
+
+    asistente1.save()
+    asistente2.save()
+    asistente3.save()
+    asistente4.save()
+    asistente5.save()
+
+    print("5 attendees saved")
+
+
+
+    print("\nTESTING ODM")
+
+    print("\nTEST 1: Find")
+
+    artists = list(Artista.find({"nombre": "Bad Bunny"}))
+
+    assert len(artists) == 1
+    print("Find Passed")
+
+    print("\nTEST 2: Update")
+
+    print("Before:", artista1.pais_de_origen)
+
+    artista1.pais_de_origen = "España"
+    artista1.save()
+
+    updated = list(Artista.find({"nombre": "Bad Bunny"}))[0]
+
+    assert updated.pais_de_origen == "España"
+
+    print("After:", updated.pais_de_origen)
+    print("Update Passed")
+
+    artista1.pais_de_origen = "Puerto Rico"
+    artista1.save()
+
+    print("\nTEST 3: Delete")
+
+    temporary = Artista(nombre="Temporary Artist", generos=["Pop"])
+    temporary.save()
+
+    print("Before delete:",
+          len(list(Artista.find({"nombre": "Temporary Artist"}))))
+
+    temporary.delete()
+
+    print("After delete:",
+          len(list(Artista.find({"nombre": "Temporary Artist"}))))
+
+    assert len(list(Artista.find({"nombre": "Temporary Artist"}))) == 0
+
+    print("Delete Passed")
+
+
+    print("\nTEST 4: Geolocation")
+
+    venue = list(Recinto.find({"nombre": "Movistar Arena"}))[0]
+
+    assert "direccion_loc" in venue._data
+
+    print("Geolocation Passed")
+
+
+    print("\nFINAL RESULTS")
+
+    print("Artists:", len(list(Artista.find({}))))
+    print("Venues:", len(list(Recinto.find({}))))
+    print("Events:", len(list(Evento.find({}))))
+    print("Attendees:", len(list(Asistente.find({}))))
+
+    print("\nAll tests passed")
